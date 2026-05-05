@@ -25,12 +25,18 @@ TORQUE_RESOLUTION = 32.0         # 1/32 Nm per LSB
 
 
 class ResistanceMode(IntEnum):
-    """Saris proprietary resistance modes (reverse-engineered, UNTESTED).
+    """Saris proprietary resistance modes.
 
-    Source: qdomyos-zwift CycleOps Phantom Bike driver.
+    Source: qdomyos-zwift cycleopsphantombike.h ControlMode enum.
+    Verified 2026-05-05: HEADLESS releases the brake (Fluid2 curve, free spin).
+    MANUAL_POWER 0W actively engages max brake — DO NOT use to disable.
     """
-    MANUAL_POWER = 0x01  # ERG mode - hold target watts
-    MANUAL_SLOPE = 0x02  # SIM mode - simulate road grade
+    HEADLESS      = 0x00  # Free spin / Fluid2 curve. THIS is the "no resistance" mode.
+    MANUAL_POWER  = 0x01  # ERG mode - hold target watts
+    MANUAL_SLOPE  = 0x02  # SIM mode - simulate road grade (param1=weight*100, param2=grade*10)
+    POWER_RANGE   = 0x03  # min/max watts
+    WARM_UP       = 0x04
+    ROLL_DOWN     = 0x05  # calibration mode
 
 
 @dataclass
@@ -120,15 +126,25 @@ def parse_cps(data: bytes) -> CpsMeasurement:
     return m
 
 
-def build_resistance_cmd(mode: ResistanceMode, value: int) -> bytes:
+def build_resistance_cmd(mode: ResistanceMode, param1: int = 0, param2: int = 0) -> bytes:
     """Build a 10-byte Saris proprietary resistance command.
 
-    WARNING: Reverse-engineered protocol, NOT YET TESTED on hardware.
+    Verified format from qdomyos-zwift cycleopsphantombike.cpp lines 61-76.
+    Both params are little-endian int16.
 
     Args:
-        mode: MANUAL_POWER (ERG) or MANUAL_SLOPE (SIM)
-        value: Target watts (ERG) or grade * 100 (SIM, e.g. 500 = 5.0%)
+        mode: HEADLESS (free spin), MANUAL_POWER (watts), MANUAL_SLOPE (weight, grade), etc.
+        param1: First parameter — meaning depends on mode:
+            - HEADLESS:     ignored
+            - MANUAL_POWER: target watts
+            - MANUAL_SLOPE: weight * 100 (kg, e.g. 8000 = 80.0 kg)
+            - POWER_RANGE:  min watts
+        param2: Second parameter — usually 0 except:
+            - MANUAL_SLOPE: grade * 10 (e.g. 50 = 5.0%; signed int16 for descents)
+            - POWER_RANGE:  max watts
     """
-    lo = value & 0xFF
-    hi = (value >> 8) & 0xFF
-    return bytes([0x00, 0x10, int(mode), lo, hi, 0x00, 0x00, 0x00, 0x00, 0x00])
+    p1_lo = param1 & 0xFF
+    p1_hi = (param1 >> 8) & 0xFF
+    p2_lo = param2 & 0xFF
+    p2_hi = (param2 >> 8) & 0xFF
+    return bytes([0x00, 0x10, int(mode), p1_lo, p1_hi, p2_lo, p2_hi, 0x00, 0x00, 0x00])

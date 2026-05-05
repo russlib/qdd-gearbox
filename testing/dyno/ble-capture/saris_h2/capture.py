@@ -3,6 +3,7 @@
 Connects via Cycling Power Service, logs all fields + derived quantities,
 and writes to CSV with optional live terminal display.
 """
+from __future__ import annotations
 
 import asyncio
 import csv

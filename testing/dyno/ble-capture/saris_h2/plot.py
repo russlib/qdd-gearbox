@@ -3,6 +3,7 @@
 Generates a 6-panel plot: power, RPM, torque (two methods), dyno curve
 (torque & power vs RPM), angular acceleration, and accumulated torque.
 """
+from __future__ import annotations
 
 import csv
 from pathlib import Path
