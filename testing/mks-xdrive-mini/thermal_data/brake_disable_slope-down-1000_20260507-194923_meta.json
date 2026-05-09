@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_disable_slope-down-1000",
+  "timestamp": "20260507-194923",
+  "csv": "brake_disable_slope-down-1000_20260507-194923.csv",
+  "png": "brake_disable_slope-down-1000_20260507-194923.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "MANUAL_SLOPE with grade -100% (param2 = -1000)",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "SIM grade -100%"
+  },
+  "parameters": {
+    "target_iq_a": 30,
+    "hold_s": 20
+  },
+  "result": {
+    "peak_rpm": 33,
+    "verdict": "FAIL \u2014 accepted but firmware clamps internally"
+  }
+}

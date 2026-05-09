@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_disable_headless",
+  "timestamp": "20260507-180308",
+  "csv": "brake_disable_headless_20260507-180308.csv",
+  "png": "brake_disable_headless_20260507-180308.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "T3 \u2014 write HEADLESS (0x00), +1 30A",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "proprietary subscribed + HEADLESS write"
+  },
+  "parameters": {
+    "target_iq_a": 30,
+    "hold_s": 15
+  },
+  "result": {
+    "peak_rpm": 33,
+    "verdict": "FAIL \u2014 ack only, no brake change"
+  }
+}

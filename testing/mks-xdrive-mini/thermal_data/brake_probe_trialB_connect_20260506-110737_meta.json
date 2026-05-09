@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_probe_trialB_connect",
+  "timestamp": "20260506-110737",
+  "csv": "brake_probe_trialB_connect_20260506-110737.csv",
+  "png": "brake_probe_trialB_connect_20260506-110737.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Trial B \u2014 BLE connected, no subscriptions, no writes (-1 dir)",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": -1,
+    "trainer_ble_state": "connected only"
+  },
+  "parameters": {
+    "target_iq_a": 15,
+    "hold_s": 15
+  },
+  "result": {
+    "peak_rpm": 1244,
+    "verdict": "free spin (freewheel disengaged in -1)"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_disable_warmup",
+  "timestamp": "20260507-180209",
+  "csv": "brake_disable_warmup_20260507-180209.csv",
+  "png": "brake_disable_warmup_20260507-180209.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "T1 \u2014 write WARM_UP (0x04) on proprietary char, +1 30A",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "proprietary subscribed + WARM_UP write"
+  },
+  "parameters": {
+    "target_iq_a": 30,
+    "hold_s": 15
+  },
+  "result": {
+    "peak_rpm": 24.7,
+    "verdict": "FAIL \u2014 heartbeat shows trainer in MANUAL_POWER 0W"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "test_name": "wahoo_erg_0w_then_spin",
+  "timestamp": "20260507-201604",
+  "csv": "wahoo_erg_0w_then_spin_20260507-201604.csv",
+  "png": "wahoo_erg_0w_then_spin_20260507-201604.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Wahoo opcode 0x42 (Set ERG, 0W) on a026e005 \u2014 Wahoo-derived char",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "Wahoo ERG 0W accepted (status 0x01)"
+  },
+  "parameters": {
+    "target_iq_a": 30,
+    "hold_s": 25
+  },
+  "result": {
+    "peak_rpm": 33,
+    "verdict": "FAIL \u2014 Wahoo opcodes accepted but inert on this firmware"
+  }
+}

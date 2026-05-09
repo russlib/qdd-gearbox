@@ -1,0 +1,39 @@
+{
+  "test_name": "adaptive_iq_at_temp",
+  "timestamp": "20260508-183838",
+  "csv": "adaptive_iq_at_temp_20260508-183838.csv",
+  "png": "adaptive_iq_at_temp_20260508-183838.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Adaptive search, ESC FAN OFF (motor fan still on)",
+  "conditions": {
+    "esc_fan": false,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 65,
+    "direction": 1,
+    "trainer_ble_state": "no client"
+  },
+  "parameters": {
+    "target_temp_c": 78,
+    "temp_high_c": 80,
+    "temp_abort_c": 85,
+    "iq_start_a": 20,
+    "up_rate_a_s": 0.15,
+    "dn_rate_a_s": 2.0,
+    "duration_s": 600
+  },
+  "result": {
+    "continuous_iq_a": 25.2,
+    "continuous_torque_nm": 1.01,
+    "steady_fet_c": 79.1,
+    "convergence_quality": "fully converged (std=0.00 over last 60s)",
+    "abort_reason": "completed normally"
+  }
+}

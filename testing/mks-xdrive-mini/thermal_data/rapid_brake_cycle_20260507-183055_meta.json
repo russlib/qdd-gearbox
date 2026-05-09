@@ -1,0 +1,32 @@
+{
+  "test_name": "rapid_brake_cycle",
+  "timestamp": "20260507-183055",
+  "csv": "rapid_brake_cycle_20260507-183055.csv",
+  "png": "rapid_brake_cycle_20260507-183055.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Rapid cycle through 9 modes at 45A \u2014 looking for brake release at speed",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "queue-write architecture (broken; 0 events fired)"
+  },
+  "parameters": {
+    "target_iq_a": 45,
+    "settle_s": 6,
+    "per_cmd_s": 3
+  },
+  "result": {
+    "peak_rpm": 49.4,
+    "verdict": "FAIL \u2014 also revealed BLE write queue bug fixed in ble_threaded.py"
+  }
+}

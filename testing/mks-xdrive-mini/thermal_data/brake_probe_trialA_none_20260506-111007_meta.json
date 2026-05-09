@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_probe_trialA_none",
+  "timestamp": "20260506-111007",
+  "csv": "brake_probe_trialA_none_20260506-111007.csv",
+  "png": "brake_probe_trialA_none_20260506-111007.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Trial A first +1 direction test, 30A 1.2Nm \u2014 wheel barely moves (16 RPM peak)",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "no client"
+  },
+  "parameters": {
+    "target_iq_a": 30,
+    "hold_s": 25
+  },
+  "result": {
+    "peak_rpm": 16.5,
+    "verdict": "brake locked, freewheel engaged in +1"
+  }
+}

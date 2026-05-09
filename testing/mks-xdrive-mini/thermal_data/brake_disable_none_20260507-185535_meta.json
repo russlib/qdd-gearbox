@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_disable_none",
+  "timestamp": "20260507-185535",
+  "csv": "brake_disable_none_20260507-185535.csv",
+  "png": "brake_disable_none_20260507-185535.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Post-rolldown 'is brake off after disconnect?' check, no BLE",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "no client (after ROLL_DOWN+disc earlier)"
+  },
+  "parameters": {
+    "target_iq_a": 45,
+    "hold_s": 30
+  },
+  "result": {
+    "peak_rpm": 41.2,
+    "verdict": "FAIL \u2014 trainer reverts to MANUAL_POWER 0W on disconnect"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "test_name": "rolldown_then_spin",
+  "timestamp": "20260507-185818",
+  "csv": "rolldown_then_spin_20260507-185818.csv",
+  "png": "rolldown_then_spin_20260507-185818.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "ROLL_DOWN then spin (v1: only ROLL_DOWN as pre-seq)",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "ROLL_DOWN, ROLL_DOWN keepalive"
+  },
+  "parameters": {
+    "target_iq_a": 45,
+    "hold_s": 25,
+    "keepalive": "ROLL_DOWN"
+  },
+  "result": {
+    "peak_rpm": 41.2,
+    "verdict": "FAIL \u2014 RollDownFailed (cmdId 0x1009 status 0x06), no HEADLESS transition"
+  }
+}

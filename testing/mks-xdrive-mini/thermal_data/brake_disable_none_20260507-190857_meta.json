@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_disable_none",
+  "timestamp": "20260507-190857",
+  "csv": "brake_disable_none_20260507-190857.csv",
+  "png": "brake_disable_none_20260507-190857.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Trainer AC UNPLUGGED \u2014 testing if eddy brake actually needs power",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "UNPLUGGED",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "no BLE possible"
+  },
+  "parameters": {
+    "target_iq_a": 30,
+    "hold_s": 30
+  },
+  "result": {
+    "peak_rpm": 41.2,
+    "verdict": "FAIL \u2014 brake still on with AC removed (likely permanent-magnet bias)"
+  }
+}

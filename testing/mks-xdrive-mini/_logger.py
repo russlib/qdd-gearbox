@@ -1,15 +1,18 @@
 """Shared test logger for the MKS Mini bench scripts.
 
-Writes a row-per-sample CSV and a standard 4-panel plot:
+Writes a row-per-sample CSV, a standard 4-panel plot, and a JSON metadata
+sidecar capturing test conditions for future reanalysis.
+
 - FET temp (C)
 - Iq (A)
 - velocity (motor RPM)
 - position (motor turns)
 
-Output: thermal_data/<test_name>_<YYYYmmdd-HHMMSS>.{csv,png}
+Output: thermal_data/<test_name>_<YYYYmmdd-HHMMSS>.{csv,png,_meta.json}
 """
 from __future__ import annotations
 import csv
+import json
 import math
 import time
 from pathlib import Path
@@ -40,6 +43,7 @@ class TestLogger:
         self.ts = ts or time.strftime("%Y%m%d-%H%M%S")
         self.csv_path = OUT_DIR / f"{test_name}_{self.ts}.csv"
         self.png_path = OUT_DIR / f"{test_name}_{self.ts}.png"
+        self.meta_path = OUT_DIR / f"{test_name}_{self.ts}_meta.json"
         self.fields = list(self.DEFAULT_FIELDS)
         if extra_fields:
             self.fields.extend(extra_fields)
@@ -48,6 +52,32 @@ class TestLogger:
         self._writer.writeheader()
         self._closed = False
         self._row_count = 0
+        self._meta: dict = {
+            "test_name": test_name,
+            "timestamp": self.ts,
+            "csv": self.csv_path.name,
+            "png": self.png_path.name,
+        }
+
+    def set_meta(self, **kwargs):
+        """Attach test conditions / hardware / result info to the metadata sidecar.
+
+        Recommended keys:
+          purpose:        one-line description
+          hardware:       dict (motor, controller, encoder, trainer, ...)
+          conditions:     dict (esc_fan, motor_fan, trainer_ac, direction, bus_v, ...)
+          parameters:     dict (target_iq, hold_s, ramp_s, ...)
+          result:         dict (peak_rpm, peak_fet, abort, verdict, ...)
+        """
+        self._meta.update(kwargs)
+
+    def write_meta(self):
+        """Persist metadata sidecar JSON. Idempotent — call any time after set_meta."""
+        try:
+            with open(self.meta_path, "w") as fh:
+                json.dump(self._meta, fh, indent=2)
+        except Exception as e:
+            print(f"  meta write skipped: {e}")
 
     def row(self, **kwargs):
         """Write a row. Missing fields = empty string."""
@@ -68,6 +98,9 @@ class TestLogger:
         if not self._closed:
             self._file.close()
             self._closed = True
+            # Write meta sidecar on close so it always exists, even if no plot
+            self._meta.setdefault("rows", self._row_count)
+            self.write_meta()
         return self.csv_path
 
     def __enter__(self): return self
@@ -76,6 +109,19 @@ class TestLogger:
     @property
     def fingerprint(self):
         return {"csv": str(self.csv_path), "png": str(self.png_path), "rows": self._row_count}
+
+    @staticmethod
+    def _conditions_subtitle(meta: dict) -> str:
+        """Build a one-line condition-summary from meta['conditions']."""
+        c = meta.get("conditions", {}) if isinstance(meta, dict) else {}
+        parts = []
+        if "esc_fan" in c: parts.append(f"ESC fan: {'on' if c['esc_fan'] else 'off'}")
+        if "motor_fan" in c: parts.append(f"motor fan: {'on' if c['motor_fan'] else 'off'}")
+        if "trainer_ac" in c: parts.append(f"trainer AC: {c['trainer_ac']}")
+        if "trainer_ble_state" in c: parts.append(f"BLE: {c['trainer_ble_state']}")
+        if "direction" in c: parts.append(f"dir {c['direction']:+d}")
+        if "bus_v" in c: parts.append(f"bus {c['bus_v']:.2f}V")
+        return " | ".join(parts)
 
     def plot(self, title: str = "", subtitle: str = "", show_phases: bool = True):
         """Standard 4-panel plot from the saved CSV."""
@@ -118,9 +164,14 @@ class TestLogger:
 
         fig, axs = plt.subplots(4, 1, figsize=(11, 11), sharex=True)
         full_title = title if title else self.test_name
-        if subtitle:
-            full_title = f"{full_title}\n{subtitle}"
-        fig.suptitle(full_title, fontsize=12)
+        # Auto-add condition line from meta if subtitle not explicit
+        cond_line = self._conditions_subtitle(self._meta)
+        sub_lines = []
+        if subtitle: sub_lines.append(subtitle)
+        if cond_line: sub_lines.append(cond_line)
+        if sub_lines:
+            full_title = full_title + "\n" + "\n".join(sub_lines)
+        fig.suptitle(full_title, fontsize=11)
 
         phase_colors = {"ramp": "#fffacd", "hold": "#ffe4b5", "cool": "#e0f0ff",
                         "idle": "#f0f0f0", "burst": "#ffd6e0"}
@@ -177,7 +228,10 @@ class TestLogger:
                 axs[0].legend(handles=handles, loc="upper right", fontsize=8)
 
         plt.tight_layout()
-        plt.subplots_adjust(top=0.93)
+        plt.subplots_adjust(top=0.90 if cond_line else 0.93)
         plt.savefig(self.png_path, dpi=130)
         plt.close(fig)
+        # Update meta on plot
+        self._meta["png"] = self.png_path.name
+        self.write_meta()
         return self.png_path
