@@ -48,6 +48,28 @@ Goal: find a BLE command that releases the H2 brake. Outcome: every documented a
 
 **Conclusion:** brake is firmware-floor-clamped on this H2 firmware. Cannot be released by any BLE protocol path tested.
 
+## 2026-05-08 — Brake characterization sweeps (POSITIVE results)
+
+Goal: characterize the H2 brake by stepping motor IQ and recording equilibrium
+RPM at each step. Found the brake is an active speed-regulating load with
+hysteresis, not a passive `T_drag(ω)` curve.
+
+| Time | Test | Mode | IQ range | Steps | Result |
+|---|---|---|---|---|---|
+| 20:24:58 | brake_drag_steady_state (failed) | dir +1 ascending | 10..45 A | aborted | velocity abort 577 RPM — encoder dir flipped after recal |
+| 20:26:17 | brake_drag_steady_state | dir -1 ascending | 10..45 A | 5 A | plateau ~31 RPM at 25-45 A; held below 15 A |
+| 20:35:33 | coast_down_settle_30A | coast attempt | 30 A | — | freewheel decoupled on torque cut, decay invisible |
+| 20:42:01 | brake_drag_reverse_sweep | dir -1 descending | 45..10 A | 5 A | plateau holds DOWN to 20 A; collapses 15→10 |
+| 20:52:38 | brake_drag_knee_ascending | dir -1 ascending | 12..22 A | 1 A | breakaway at 17 A, plateau by 20 A |
+| 20:57:35 | brake_drag_knee_descending | dir -1 descending | 30..12 A | 1 A | plateau holds to 14 A, stops at 12 A |
+
+**Hysteresis loop (combined ascending + descending at 1 A):**
+- Pull-in current (cold): 17 A (0.68 Nm) — motor breaks free
+- Drop-out current (warm): 13 A (0.52 Nm) — motor stalls
+- Bistable band: 13–16 A
+- Plateau: 20–45 A → ~31 RPM, T = IQ · Kt
+- Combined plot: `brake_hysteresis_overlay.png`
+
 ## 2026-05-08 — Continuous current characterization (POSITIVE results)
 
 Goal: find the max continuous IQ where FET temperature stabilizes at the safe limit. Run with adaptive PI controller targeting 80 °C.
@@ -95,9 +117,12 @@ To query: `Get-Content thermal_data\<name>_meta.json | ConvertFrom-Json`.
 
 - `brake_disable_probe.py` — unified BLE-then-spin probe (modes: none/warmup/headless/...)
 - `adaptive_iq_at_temp.py` — closed-loop PI controller for continuous-current search
+- `brake_drag_steady_state.py` — multi-IQ-step sweep with auto-stability detection (supports `--steps` and `--direction`)
+- `coast_down.py` — spin-up and torque-cut decay logger (settle/kick modes)
+- `plot_brake_hysteresis.py` — overlay all brake-drag sweeps on one hysteresis plot
 - `byte_fuzz_probe.py` — Wahoo/proprietary char fuzzer
 - `cps_control_probe.py` — standard CPS Control Point opcode probe
 - `probe_wahoo_opcodes.py` — Wahoo KICKR opcodes on `a026e005`
-- `compare_brake_tests.py` — generates the comparison plots above
+- `compare_brake_tests.py` — generates the brake-disable comparison plots
 - `_logger.py` — shared CSV/PNG/meta writer
 - `saris_h2/ble_threaded.py` — robust threaded BLE session class (replaces broken queue-poll)

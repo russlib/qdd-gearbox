@@ -37,9 +37,76 @@ Tested 30+ BLE commands across three characteristics:
 **Root-cause hypothesis:** the H2's eddy brake has a **permanent-magnet bias** that produces baseline drag at all times. Coil current can ADD to this baseline but cannot subtract. No software path exists to remove the bias magnet's contribution.
 
 **Workarounds for the bench:**
-1. **Use H2 as-is and characterize the drag** — `T_drag(ω) ≈ 0.3 Nm·s/rad` linear viscous, repeatable
+1. **Use H2 as-is and treat as a programmable speed-regulated load** — see brake characterization section below
 2. **Replace with passive trainer** — CycleOps Fluid2 / Kinetic Road Machine ($80–180 used) — no eddy brake at all
 3. **Hardware mod** — open H2 housing, remove or shim the bias magnet 5+ mm from flywheel disc
+
+## Brake characterization (2026-05-08)
+
+Steady-state IQ sweeps (ascending and descending) at 1 A and 5 A resolution, +
+attempted coast-down decay. The brake is **NOT a passive viscous drag**; it is
+an active speed-regulating load with significant hysteresis.
+
+### Hysteresis loop summary
+
+| Operating regime | IQ range | Behavior |
+|---|---|---|
+| Stalled | < 12 A | Brake holds flywheel stationary regardless of history |
+| **Bistable (hysteresis band)** | 13–16 A | Stationary if cold-started; ~8–22 RPM if previously spinning |
+| Pull-in transient | 17–19 A | Cold-start motor breaks loose, spins up monotonically |
+| **Plateau** | 20–45 A | Flywheel held at ~31 RPM; brake torque tracks `T = IQ · Kt` |
+
+### Characteristic numbers
+
+- **Static hold-up torque** (brake stops motor from cold): ≥ 0.64 Nm (16 A holds, 17 A breaks free)
+- **Drop-out torque** (brake gives up while spinning): ~0.50 Nm (12 A stalls, 13 A barely moves at 4 RPM)
+- **Hysteresis torque difference**: ~0.15 Nm — pull-in vs drop-out gap
+- **Plateau speed**: ~31 RPM ± 2, virtually independent of IQ from 20–45 A
+- **Plateau torque range**: 0.8 → 1.8 Nm at the same ~31 RPM (regulator defends speed against varying input)
+
+### Why the brake is "active"
+
+In the 20–45 A range, motor torque doubles from 0.8 → 1.8 Nm but RPM stays
+flat at ~31. A passive `T_drag(ω)` curve cannot have one ω map to multiple
+torques. The H2 firmware regulates eddy-brake coil current to maintain the
+flywheel at a target speed (likely the Fluid2-curve simulation it defaults
+to). Above and below the regulator's authority the brake degenerates to
+its baseline (permanent-magnet bias).
+
+### Coast-down impossible from motor side
+
+Attempted: ramp motor to plateau speed, cut torque, log RPM decay.
+**Result:** RPM dropped below 0.5 within ~50 ms. The H2's freewheel is a
+**one-way clutch** — when motor torque drops, the flywheel's higher RPM
+cannot drive the motor backward through the clutch. The motor's tiny rotor
+inertia stops itself almost instantly under its own internal friction
+while the flywheel keeps spinning behind the disengaged clutch.
+
+Implication: **`T_drag(ω)` cannot be extracted from coast-down** on this
+rig without bypassing the freewheel (hardware mod). The steady-state
+operating points above are the only data extractable from the motor side.
+
+### Bench-usability verdict
+
+The H2 functions as a **programmable load with a regulated speed setpoint**.
+Useful operating envelope:
+
+- **20–45 A IQ → known torque at known speed** (`T = IQ · Kt`, RPM ≈ 31)
+- **Below 12 A → stalled** (no flow)
+- **13–16 A → unreliable** (state-dependent)
+
+For thermal/efficiency runs at a fixed (T, ω) operating point, the rig is
+fully adequate. For sweeping `T_drag(ω)` it is not.
+
+### Test artifacts
+
+- `thermal_data/brake_drag_steady_state_20260508-202617.csv` — ascending 10..45 A (5 A)
+- `thermal_data/brake_drag_reverse_sweep_20260508-204201.csv` — descending 45..10 A (5 A)
+- `thermal_data/brake_drag_knee_ascending_20260508-205238.csv` — ascending 12..22 A (1 A)
+- `thermal_data/brake_drag_knee_descending_20260508-205735.csv` — descending 30..12 A
+- `thermal_data/coast_down_settle_30A_20260508-203533.csv` — coast attempt (showed freewheel decoupling)
+- `thermal_data/brake_hysteresis_overlay.png` — combined hysteresis plot
+- `brake_drag_steady_state.py`, `coast_down.py`, `plot_brake_hysteresis.py`
 
 ## Thermal model (FET PCB thermistor)
 
@@ -98,14 +165,15 @@ Rejected (status `0x02`): `0x40`, `0x41`, `0x4A`, `0x4B`-`0x4E`. Wahoo unlock ke
 
 - Motor calibration **does** persist in flash (motor R, L, Kt, current_lim, encoder direction/CPR).
 - Encoder offset **does not** persist on DC bus power cycle. Need state 7 (ENCODER_OFFSET_CALIBRATION) after every bus reset.
-- Offset values vary between cal runs (e.g. 6782, 18591, 18627, 18805 across this campaign). All valid; not a bug.
+- Offset values vary between cal runs (e.g. 6782, 18591, 18627, 18805, -20107 across this campaign). All valid; not a bug.
 - USB cycle without DC bus reset preserves the offset.
+- **Encoder direction can flip** after a state-3 full cal. The 2026-05-08 recal flipped it: the direction that previously engaged the freewheel was +1, post-recal it's -1. Always verify with a small probe before assuming a direction sign.
 
 ## Things missing / future work
 
 - **Motor body temperature.** We only have FET PCB thermistor. Motor windings could be 30+ °C hotter at high IQ. A clip-on thermocouple or in-winding NTC would give a real motor thermal limit.
 - **Bus current logging.** Should add `odrv.ibus` to logged columns to compute mechanical efficiency vs supply input.
-- **Brake characterization.** With brake undisableable, build a coast-down + multi-current-step test to fit `T_drag(ω, ω̇)` for the H2. Then subtract from motor torque measurements.
+- ~~**Brake characterization.**~~ **DONE 2026-05-08** — see "Brake characterization" section above. Verdict: H2 is a regulated speed-loader, not a viscous drag. Coast-down impossible from motor side (one-way clutch).
 - **Index pin on AMT-102.** Wiring the Z pin and enabling `use_index = True` would persist encoder offset across power cycles.
 - **Saris Utility / Rouvy / Zwift BLE sniff.** Highest-leverage unfinished experiment. Could reveal a privileged command we missed.
 - **ANT+ FE-C path.** $25 Garmin ANT+ stick + `openant`. The ANT+ codepath in the H2 firmware may have different brake-control semantics than BLE.

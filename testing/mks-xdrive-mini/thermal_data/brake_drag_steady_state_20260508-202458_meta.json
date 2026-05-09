@@ -1,0 +1,45 @@
+{
+  "test_name": "brake_drag_steady_state",
+  "timestamp": "20260508-202458",
+  "csv": "brake_drag_steady_state_20260508-202458.csv",
+  "png": "brake_drag_steady_state_20260508-202458.png",
+  "purpose": "Multi-current steady-state sweep to fit T_drag(omega) for H2 trainer brake",
+  "hardware": {
+    "motor": "D6374-150KV",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1)",
+    "encoder": "AMT-102 ABI 8192 CPR",
+    "trainer": "Saris Hammer H2 (eddy brake, baseline-clamped)"
+  },
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "trainer_ble_state": "default (no BLE control sent)",
+    "direction": 1,
+    "bus_v": 33.96760177612305,
+    "current_lim_a": 55.0
+  },
+  "parameters": {
+    "iq_steps_a": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0,
+      35.0,
+      40.0,
+      45.0
+    ],
+    "min_hold_s": 8.0,
+    "max_hold_s": 35.0,
+    "stable_window_s": 5.0,
+    "stable_rpm_std": 0.6,
+    "kt_nm_per_a": 0.04
+  },
+  "result": {
+    "abort": "velocity abort (577 RPM)",
+    "steps_completed": 0,
+    "steps": []
+  },
+  "rows": 9
+}

@@ -1,0 +1,173 @@
+{
+  "test_name": "brake_drag_knee_descending",
+  "timestamp": "20260508-205735",
+  "csv": "brake_drag_knee_descending_20260508-205735.csv",
+  "png": "brake_drag_knee_descending_20260508-205735.png",
+  "purpose": "Multi-current steady-state sweep to fit T_drag(omega) for H2 trainer brake",
+  "hardware": {
+    "motor": "D6374-150KV",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1)",
+    "encoder": "AMT-102 ABI 8192 CPR",
+    "trainer": "Saris Hammer H2 (eddy brake, baseline-clamped)"
+  },
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "trainer_ble_state": "default (no BLE control sent)",
+    "direction": -1,
+    "bus_v": 33.936988830566406,
+    "current_lim_a": 55.0
+  },
+  "parameters": {
+    "iq_steps_a": [
+      30.0,
+      25.0,
+      22.0,
+      21.0,
+      20.0,
+      19.0,
+      18.0,
+      17.0,
+      16.0,
+      15.0,
+      14.0,
+      13.0,
+      12.0
+    ],
+    "min_hold_s": 8.0,
+    "max_hold_s": 35.0,
+    "stable_window_s": 5.0,
+    "stable_rpm_std": 0.6,
+    "kt_nm_per_a": 0.04
+  },
+  "result": {
+    "abort": null,
+    "steps_completed": 13,
+    "steps": [
+      {
+        "iq_a": 30.0,
+        "torque_nm": 1.2,
+        "rpm_eq": 31.1279296875,
+        "rpm_std": 5.989536340501511,
+        "fet_c": 44.16386413574219,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 25.0,
+        "torque_nm": 1.0,
+        "rpm_eq": 31.1279296875,
+        "rpm_std": 5.179004745018658,
+        "fet_c": 42.643516540527344,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 22.0,
+        "torque_nm": 0.88,
+        "rpm_eq": 31.31103515625,
+        "rpm_std": 5.382179610607569,
+        "fet_c": 40.99453353881836,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 21.0,
+        "torque_nm": 0.84,
+        "rpm_eq": 32.77587890625,
+        "rpm_std": 5.061135850006806,
+        "fet_c": 40.45847702026367,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 20.0,
+        "torque_nm": 0.8,
+        "rpm_eq": 30.21240234375,
+        "rpm_std": 4.254986586409515,
+        "fet_c": 39.691810607910156,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 19.0,
+        "torque_nm": 0.76,
+        "rpm_eq": 32.77587890625,
+        "rpm_std": 5.6258391708022035,
+        "fet_c": 38.83251953125,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 18.0,
+        "torque_nm": 0.72,
+        "rpm_eq": 30.21240234375,
+        "rpm_std": 4.59591079028728,
+        "fet_c": 38.13888931274414,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 17.0,
+        "torque_nm": 0.68,
+        "rpm_eq": 26.3671875,
+        "rpm_std": 4.110707578242856,
+        "fet_c": 37.38070297241211,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 16.0,
+        "torque_nm": 0.64,
+        "rpm_eq": 21.6064453125,
+        "rpm_std": 5.001159771880248,
+        "fet_c": 36.73325729370117,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 15.0,
+        "torque_nm": 0.6,
+        "rpm_eq": 15.19775390625,
+        "rpm_std": 4.581297364451954,
+        "fet_c": 36.258792877197266,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 14.0,
+        "torque_nm": 0.56,
+        "rpm_eq": 8.23974609375,
+        "rpm_std": 3.841801425550609,
+        "fet_c": 35.57114028930664,
+        "stable_at_s": null,
+        "samples": 46
+      },
+      {
+        "iq_a": 13.0,
+        "torque_nm": 0.52,
+        "rpm_eq": 4.21142578125,
+        "rpm_std": 4.118855668653073,
+        "fet_c": 34.9675407409668,
+        "stable_at_s": null,
+        "samples": 45
+      },
+      {
+        "iq_a": 12.0,
+        "torque_nm": 0.48,
+        "rpm_eq": 0.0,
+        "rpm_std": 0.0,
+        "fet_c": 35.209632873535156,
+        "stable_at_s": 16.109162092208862,
+        "samples": 46
+      }
+    ]
+  },
+  "rows": 4077,
+  "linear_fit": {
+    "slope_nm_per_rpm": 0.013356068664470689,
+    "intercept_nm": 0.4413648021457132,
+    "samples": 13
+  }
+}
