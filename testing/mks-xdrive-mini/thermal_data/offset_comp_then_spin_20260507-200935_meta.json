@@ -1,0 +1,31 @@
+{
+  "test_name": "offset_comp_then_spin",
+  "timestamp": "20260507-200935",
+  "csv": "offset_comp_then_spin_20260507-200935.csv",
+  "png": "offset_comp_then_spin_20260507-200935.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Standard CPS opcode 0x0C (Start Offset Compensation) on char 0x2A66",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "CPS Control Point 0x0C accepted"
+  },
+  "parameters": {
+    "target_iq_a": 30,
+    "hold_s": 25
+  },
+  "result": {
+    "peak_rpm": 41.2,
+    "verdict": "FAIL \u2014 response 20 0c 01 ff ff (Success) but no brake change"
+  }
+}

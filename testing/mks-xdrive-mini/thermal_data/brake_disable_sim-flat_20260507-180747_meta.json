@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_disable_sim-flat",
+  "timestamp": "20260507-180747",
+  "csv": "brake_disable_sim-flat_20260507-180747.csv",
+  "png": "brake_disable_sim-flat_20260507-180747.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "SIM_FLAT \u2014 MANUAL_SLOPE grade 0%, +1 30A",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "BLE may have dropped"
+  },
+  "parameters": {
+    "target_iq_a": 30,
+    "hold_s": 15
+  },
+  "result": {
+    "peak_rpm": 24.7,
+    "verdict": "FAIL"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "test_name": "rolldown_then_spin",
+  "timestamp": "20260507-190017",
+  "csv": "rolldown_then_spin_20260507-190017.csv",
+  "png": "rolldown_then_spin_20260507-190017.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "ROLL_DOWN with HEADLESS+WARM_UP pre-seq + HEADLESS keepalive \u2014 heartbeat CONFIRMED HEADLESS at t=6.45s",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": 1,
+    "trainer_ble_state": "HEADLESS confirmed via heartbeat, brake still on"
+  },
+  "parameters": {
+    "target_iq_a": 45,
+    "hold_s": 15,
+    "keepalive": "HEADLESS"
+  },
+  "result": {
+    "peak_rpm": 41.2,
+    "verdict": "DEFINITIVE FAIL \u2014 HEADLESS = Fluid2 curve, NOT free spin"
+  }
+}

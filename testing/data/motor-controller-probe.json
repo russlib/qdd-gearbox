@@ -1,0 +1,44 @@
+{
+  "serial_number": "62080355742261",
+  "bus_voltage_v": 23.971729278564453,
+  "fw_version": {
+    "major": 0,
+    "minor": 0,
+    "revision": 0,
+    "unreleased": 1
+  },
+  "hw_version": {
+    "major": 3,
+    "minor": 6,
+    "variant": 56
+  },
+  "axis_state": 1,
+  "errors": {
+    "axis": 2048,
+    "motor": 0,
+    "encoder": 0
+  },
+  "motor_config": {
+    "current_lim_a": 10.0,
+    "phase_resistance_ohm": 0.04890414699912071,
+    "phase_inductance_h": 2.2099044144852087e-05,
+    "pole_pairs": 7,
+    "pre_calibrated": true
+  },
+  "encoder_config": {
+    "cpr": 8192,
+    "pre_calibrated": false
+  },
+  "controller_config": {
+    "control_mode": 1,
+    "input_mode": 1,
+    "pos_gain": 15.0,
+    "vel_gain": 0.10000000149011612,
+    "vel_integrator_gain": 0.20000000298023224,
+    "vel_ramp_rate": 10.0
+  },
+  "watchdog": {
+    "enabled": true,
+    "timeout_s": 0.5
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "test_name": "coast_down_settle_30A",
+  "timestamp": "20260508-203533",
+  "csv": "coast_down_settle_30A_20260508-203533.csv",
+  "png": "coast_down_settle_30A_20260508-203533.png",
+  "purpose": "Coast-down (settle) characterization of H2 brake; spin to 30.0A then cut torque to log RPM decay",
+  "hardware": {
+    "motor": "D6374-150KV",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1)",
+    "encoder": "AMT-102 ABI 8192 CPR",
+    "trainer": "Saris Hammer H2"
+  },
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "trainer_ble_state": "default (no BLE control)",
+    "direction": -1,
+    "bus_v": 33.96760177612305,
+    "current_lim_a": 60.0
+  },
+  "parameters": {
+    "mode": "settle",
+    "iq_spin_a": 30.0,
+    "ramp_s": 1.0,
+    "spin_hold_s": 8.0,
+    "coast_s": 30.0,
+    "kt_nm_per_a": 0.04
+  },
+  "rows": 146
+}

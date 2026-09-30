@@ -1,0 +1,31 @@
+{
+  "test_name": "brake_probe_trialC_cps",
+  "timestamp": "20260506-110811",
+  "csv": "brake_probe_trialC_cps_20260506-110811.csv",
+  "png": "brake_probe_trialC_cps_20260506-110811.png",
+  "hardware": {
+    "motor": "D6374-150KV BLDC",
+    "controller": "MKS XDrive Mini (ODrive 0.5.1 fw)",
+    "encoder": "AMT-102 ABI (no index wired)",
+    "trainer": "Saris Hammer H2 (CycleOps H2)"
+  },
+  "purpose": "Trial C \u2014 BLE + CPS measurement subscribe (-1 dir)",
+  "conditions": {
+    "esc_fan": true,
+    "motor_fan": true,
+    "trainer_ac": "on",
+    "ambient_c": 25,
+    "bus_v": 34.0,
+    "current_lim_a": 60,
+    "direction": -1,
+    "trainer_ble_state": "CPS subscribed"
+  },
+  "parameters": {
+    "target_iq_a": 15,
+    "hold_s": 15
+  },
+  "result": {
+    "peak_rpm": 1236,
+    "verdict": "free spin (CPS subscribe brake-safe)"
+  }
+}
